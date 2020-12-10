@@ -1,72 +1,13 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<?php include "points.php" ?>
-	<meta charset="UTF-8">
-	<title>Journal</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-	<style>
-		<?php include 'style.css'; ?>
-	</style>
-</head>
-<body>
-
-	<?php
-		$adviser = array();
-
-		$adviser[0]['name'] = "Ergaly Kairov";
-		$adviser[0]['group'] = "CSSE-1803";
-		$adviser[1]['name'] = "Sharbanu Ulpanova";
-		$adviser[1]['group'] = "CSSE-1806";
-		$adviser[2]['name'] = "Aibek Tokishev";
-		$adviser[2]['group'] = "CSSE-1801";
-
-		$file = fopen("files/auto.txt", "r");
-		while(!feof($file))
-		{
-		    $str = htmlentities(fgets($file));
-		}
-		fclose($file);
-	?>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-	<div class="container">
-	  <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-	    <a class="navbar-brand" href="#">Adviser Journal</a>
-	    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-	      <li class="nav-item active">
-	        <a class="nav-link" href="main.php">Home <span class="sr-only">(current)</span></a>
-	      </li>
-	      <li class="nav-item">
-	        <a class="nav-link" href="post.php">Send Email<span class="sr-only"></span></a>
-	      </li>
-	    </ul>
-	    <form method="POST" class="form-inline my-2 my-lg-0">
-	      <button class="btn btn-outline-danger my-2 my-sm-0" name="btn">Exit</button>
-			<?php
-            	if (isset($_POST['btn'])) {
-            		header("Location: auto.php");
-            	}
-            ?>
-
-	    </form>
-	  </div>
-	</div>
-</nav>
-
+<?php
+	require_once 'generalMain.php';
+?>
 	<div class="container">
   		<div class="col-12">
-
   			<h2 class="mb-4">
   				<?php
-  				$gr = '';
-  				foreach ($adviser as $ad) {
-  					if($ad['name'] == $str) {
-  						$gr = $ad['group'];
-  						echo $str .' - your group - ' .$ad['group'];
-  					}
-  				}
-  					
+  					echo $adviser[0][1] .' - your group - ' .$adviser[0][4];
   				?>
   			</h2>
 
@@ -83,39 +24,65 @@
 			  </thead>
 			  <tbody>
 			  	<?php
-			  		foreach ($groups as $g) {
-			  			if($g['group'] == $gr) {
-			  				?>
-			  				<tr>
-						    <th class="bg-th"><a href="student.php?id=<?=$g['id']?> " id="id">
-							    <div class="row"> 
-							      <img class="mx-4 s-img rounded" src=<?= $g['pic'] ?>>
-							      <div class="my-auto">
-							      	<p class="p-s">Name: <?= $g['name'] ?> </p>
-							      	<p class="lead">ID: <?= $g['id'] ?> </p>
-							      	<p class="lead">Age: <?= $g['age'] ?> </p>
-							      </div>
-						  		</div>
-						  		</a>
-						  	</th>
-						  		<?php
-						  		foreach ($mark as $m) {
-						  			if($g['id'] == $m['st_id']) {
-						  				?>
-						  				<td <?php if($m['java'] <= 50) { ?> class="red" <?php } ?>><?= $m['java'] ?></td>
-						  				<td <?php if($m['python'] <= 50) { ?> class="red" <?php } ?>><?= $m['python'] ?></td>
-						  				<td <?php if($m['c'] <= 50) { ?> class="red" <?php } ?>><?= $m['c'] ?></td>
-						  				<td <?php if($m['web'] <= 50) { ?> class="red" <?php } ?>><?= $m['web'] ?></td>
-						  				<td <?php if($m['kazakh'] <= 50) { ?> class="red" <?php } ?>> <?= $m['kazakh'] ?></td>
-						  				<?php
-						  			}
-						  		}
-						  		?>
-						    </tr>
-				   	 		<?php
-				   	 	}
-			  		}
-			  	?>
+			  		$students = mysqli_query($connect, "SELECT * FROM students WHERE group_id = '$adviserGroup' ");
+  					$students = mysqli_fetch_all($students);
+
+			  		foreach ($students as $s) {
+			  			$id = $s[0];
+		  		?>
+		  				<tr>
+					    <th class="bg-th"><a href="student.php?id=<?=$s[0]?> " id="id">
+						    <div class="row"> 
+						      <img class="mx-4 s-img rounded" src=<?= $s[3] ?>>
+						      <div class="my-auto">
+						      	<p class="p-s">Name: <?= $s[1] ?> </p>
+						      	<p class="lead">ID: <?= $s[0] ?> </p>
+						      	<p class="lead">Age: <?= $s[6] ?> </p>
+						      </div>
+					  		</div>
+					  		</a>
+					  	</th>
+				<?php
+						$marks = array();
+				  		$java = mysqli_query($connect, "SELECT student_id, subject_id, round(avg(mark), 1) FROM marks WHERE student_id = '$id' AND subject_id = 1 ");
+						$java = mysqli_fetch_all($java);
+
+						$python = mysqli_query($connect, "SELECT student_id, subject_id, round(avg(mark), 1) FROM marks WHERE student_id = '$id' AND subject_id = 2 ");
+						$python = mysqli_fetch_all($python);
+
+						$c = mysqli_query($connect, "SELECT student_id, subject_id, round(avg(mark), 1) FROM marks WHERE student_id = '$id' AND subject_id = 3 ");
+						$c = mysqli_fetch_all($c);
+
+						$web = mysqli_query($connect, "SELECT student_id, subject_id, round(avg(mark), 1) FROM marks WHERE student_id = '$id' AND subject_id = 4 ");
+						$web = mysqli_fetch_all($web);
+
+						$kazakh = mysqli_query($connect, "SELECT student_id, subject_id, round(avg(mark), 1) FROM marks WHERE student_id = '$id' AND subject_id = 5 ");
+						$kazakh = mysqli_fetch_all($kazakh);
+
+						$marks = array_merge($java, $python, $c, $web, $kazakh);
+
+				  		foreach ($marks as $m) {
+				?>
+			  				<td <?php if($m[2] <= 50) { ?> class="red" <?php } ?>>
+			  					<?php 
+			  						if($m[1] == 1)
+			  							echo $m[2];
+			  						if($m[1] == 2)
+			  							echo $m[2];
+			  						if($m[1] == 3)
+			  							echo $m[2];
+			  						if($m[1] == 4)
+			  							echo $m[2];
+			  						if($m[1] == 5)
+			  							echo $m[2];
+			  					?>
+			  						
+			  				</td>
+				<?php
+				  		}
+				  	}
+				?>
+						</tr>
 			  </tbody>
 			</table>
 		</div>
