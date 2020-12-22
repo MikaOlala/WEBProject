@@ -20,7 +20,16 @@
                   $count++;
               }
               if($count == 0) {
-                header("Location: auto.php");
+                session_start();
+
+                $user = array();
+                $user[0] = $_POST["name"];
+                $user[1] = $_POST["login"];
+                $user[2] = $_POST["password"];
+
+                $_SESSION['user'] = $user;
+
+                header("Location: regPost.php");
               }
               else {
                 echo 

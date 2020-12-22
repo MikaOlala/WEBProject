@@ -18,6 +18,9 @@
   $adviser = mysqli_query($connect, "SELECT a.id, a.name, a.login, a.password, g.name, a.group_id FROM advisers a, groups g WHERE a.login LIKE '$login' AND g.id = a.group_id ");
   $adviser = mysqli_fetch_all($adviser);
   $adviserGroup = $adviser[0][5];
+
+  if($adviser[0][5]==null)
+    header("Location: noGroup.php");
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
   <div class="container">

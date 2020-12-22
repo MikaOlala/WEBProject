@@ -57,3 +57,7 @@ th a:hover{
 .bg-tr {
 	background: #F1F5FF;
 }
+.break {
+	width: 500px;
+	word-wrap: break-word;
+}

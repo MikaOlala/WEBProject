@@ -25,20 +25,27 @@
   					header("Location: main.php");
 
 
-				$student = mysqli_query($connect, "SELECT s.id, s.name, g.name, s.picture, s.mail, s.pmail, s.age FROM students s, groups g WHERE s.group_id = g.id AND s.id = '$id' ");
+				$student = mysqli_query($connect, "SELECT s.id, s.name, g.name, s.picture, s.mail, s.pmail, s.age, s.pname, s.social FROM students s, groups g WHERE s.group_id = g.id AND s.id = '$id' ");
 				$student = mysqli_fetch_all($student);
 			?>
 			<div class="jumbotron jumbotron-fluid">
 			  <div class="container">
 			    <div class="row"> 
 			      <img class="mx-4 rounded float-left" src=<?= $student[0][3] ?>>
-			      <div class="my-auto">
+			      <div class="my-auto mx-4">
 			      	<p class="p-s">Name: <?= $student[0][1] ?> - <?= $student[0][0] ?> </p>
 			      	<p class="lead">Group: <?= $student[0][2] ?> </p>
 			      	<p class="lead">Age: <?= $student[0][6] ?> </p>
 			      	<p class="lead">Email: <?= $student[0][4] ?> </p>
-			      	<p class="lead">Parent's Email: <?= $student[0][5] ?> </p>
 			      </div>
+			      <div  class="my-auto ml-4">
+			      	<p class="p-s">Parents information</p>
+			      	<p class="lead">Name: <?= $student[0][7] ?> </p>
+			      	<p class="lead">Email: <?= $student[0][5] ?> </p>
+			      	<p class="p-s mt-1">Social issues:</p>
+			      	<p class="lead break"><?= $student[0][8] ?> </p>
+			      </div>
+
 		  		</div>
 			  </div>
 			</div>
