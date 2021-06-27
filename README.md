@@ -7,5 +7,5 @@
       
 🍰 My part: The rest part ~ all another pages, email system, authorization, registration, password recovering.
 
-<img src="img/img1.png" width="400" />
-<img src="img/img2.png" width="400" />
+<img src="img/img1.png" width="500" />
+<img src="img/img2.png" width="50%" />
